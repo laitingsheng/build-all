@@ -1,0 +1,41 @@
+include_guard(GLOBAL)
+
+message(STATUS "Using ${DEPENDENCY_VERSION} of TIFF library.")
+
+ExternalProject_Add("${DEPENDENCY}"
+	${EP_BASE_LOCATION_ARGS}
+	GIT_REPOSITORY "${GITLAB_PREFIX}libtiff/libtiff.git"
+	GIT_TAG "v${DEPENDENCY_VERSION}"
+	${EP_GIT_ARGS}
+	PATCH_COMMAND
+		"${CMAKE_COMMAND}"
+		"-E"
+		"copy_if_different"
+		"${CMAKE_CURRENT_LIST_DIR}/FindLibLZMA.cmake"
+		"${CMAKE_CURRENT_LIST_DIR}/FindWebP.cmake"
+		"${CMAKE_CURRENT_LIST_DIR}/FindZSTD.cmake"
+		"<SOURCE_DIR>/cmake"
+	${EP_CMAKE_DEFAULT_GENERATOR}
+	CMAKE_ARGS
+		${EP_CMAKE_DEFAULT_CONFIGURE_ARGS}
+	CMAKE_CACHE_ARGS
+		${EP_CMAKE_DEFAULT_CONFIGURE_CACHE_ARGS}
+		"-DZLIB_USE_STATIC_LIBS:BOOL=TRUE"
+		"-DBUILD_SHARED_LIBS:BOOL=FALSE"
+		"-Dtiff-tests:BOOL=FALSE"
+		"-Dtiff-docs:BOOL=FALSE"
+	CONFIGURE_HANDLED_BY_BUILD TRUE
+	${EP_WITH_BUILD_EXTRA_ARGS}
+	DEPENDS
+		"jbigkit"
+		"lerc"
+		"libdeflate"
+		"libjpeg-turbo"
+		"libwebp"
+		"xz"
+		"zlib"
+		"zstd"
+	EXCLUDE_FROM_ALL TRUE
+)
+
+set(DEPENDENCY_ENABLED TRUE)

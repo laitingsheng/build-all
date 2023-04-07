@@ -1,0 +1,3 @@
+find_package(LibLZMA CONFIG REQUIRED)
+
+set(LIBLZMA_FOUND TRUE)
