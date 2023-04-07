@@ -28,8 +28,8 @@ ExternalProject_Add_Step("${DEPENDENCY}" "compat"
 		"${CMAKE_COMMAND}"
 		"-E"
 		"copy_if_different"
-		"${EP_INSTALL}/lib/libwebp.lib"
-		"${EP_INSTALL}/lib/webp.lib"
+		"<INSTALL_DIR>/lib/libwebp.lib"
+		"<INSTALL_DIR>/lib/webp.lib"
 	DEPENDEES
 		"install"
 	LOG TRUE

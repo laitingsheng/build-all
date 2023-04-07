@@ -2,6 +2,64 @@ include_guard(GLOBAL)
 
 message(STATUS "Using ${DEPENDENCY_VERSION} of OpenCV.")
 
+set(OPENCV_MODULES
+	"calib3d"
+	"core"
+	"dnn"
+	"features2d"
+	"flann"
+	"gapi"
+	"highgui"
+	"imgcodecs"
+	"imgproc"
+	"ml"
+	"objdetect"
+	"video"
+	"videoio"
+
+	"bgsegm"
+	"ccalib"
+	"cudaarithm"
+	"cudabgsegm"
+	"cudacodec"
+	"cudafeatures2d"
+	"cudafilters"
+	"cudaimgproc"
+	"cudaobjdetect"
+	"cudawarping"
+	"cudev"
+	"dnn_objdetect"
+	"freetype"
+	"hfs"
+	"img_hash"
+	"line_descriptor"
+	"reg"
+	"shape"
+)
+string(JOIN ", " MODULES_STRING ${OPENCV_MODULES})
+message(STATUS "Building OpenCV with modules: ${MODULES_STRING}.")
+
+string(JOIN "\;" ESCAPED_OPENCV_MODULES ${OPENCV_MODULES})
+
+ExternalProject_Add("${DEPENDENCY}_contrib"
+	${EP_BASE_LOCATION_ARGS}
+	GIT_REPOSITORY "${GITHUB_PREFIX}opencv/opencv_contrib.git"
+	GIT_TAG "${DEPENDENCY_VERSION}"
+	${EP_GIT_ARGS}
+	CONFIGURE_COMMAND ""
+	BUILD_COMMAND ""
+	INSTALL_COMMAND ""
+	TEST_COMMAND ""
+	LOG_DOWNLOAD TRUE
+	DEPENDS
+		"freetype"
+		"harfbuzz"
+	EXCLUDE_FROM_ALL TRUE
+)
+
+ExternalProject_Get_Property("${DEPENDENCY}_contrib" SOURCE_DIR)
+set(OPENCV_EXTRA_MODULES_PATH "${SOURCE_DIR}/modules")
+
 ExternalProject_Add("${DEPENDENCY}"
 	${EP_BASE_LOCATION_ARGS}
 	GIT_REPOSITORY "${GITHUB_PREFIX}opencv/opencv.git"
@@ -12,16 +70,19 @@ ExternalProject_Add("${DEPENDENCY}"
 		${EP_CMAKE_DEFAULT_CONFIGURE_ARGS}
 	CMAKE_CACHE_ARGS
 		${EP_CMAKE_DEFAULT_CONFIGURE_CACHE_ARGS}
+		"-DPython_ROOT_DIR:PATH=${Python_ROOT_DIR}"
 		"-DProtobuf_USE_STATIC_LIBS:BOOL=TRUE"
 		"-DZLIB_USE_STATIC_LIBS:BOOL=TRUE"
 		"-DOPENCV_ENABLE_NONFREE:BOOL=TRUE"
-		# "-DOPENCV_EXTRA_MODULES_PATH:PATH=${OPENCV_EXTRA_MODULES_PATH}"
+		"-DBUILD_LIST:STRING=${ESCAPED_OPENCV_MODULES}"
+		"-DOPENCV_EXTRA_MODULES_PATH:PATH=${OPENCV_EXTRA_MODULES_PATH}"
 		"-DOPENCV_FORCE_3RDPARTY_BUILD:BOOL=TRUE"
 		"-DBUILD_ZLIB:BOOL=FALSE"
 		"-DBUILD_TIFF:BOOL=FALSE"
 		"-DBUILD_JPEG:BOOL=FALSE"
 		"-DBUILD_PNG:BOOL=FALSE"
 		"-DBUILD_WEBP:BOOL=FALSE"
+		"-DWITH_CUDA:BOOL=TRUE"
 		"-DWITH_FFMPEG:BOOL=FALSE"
 		"-DWITH_IPP:BOOL=FALSE"
 		"-DWITH_OPENMP:BOOL=TRUE"
@@ -43,6 +104,8 @@ ExternalProject_Add("${DEPENDENCY}"
 	CONFIGURE_HANDLED_BY_BUILD TRUE
 	${EP_WITH_BUILD_EXTRA_ARGS}
 	DEPENDS
+		"opencv_contrib"
+
 		"libjpeg-turbo"
 		"libpng"
 		"libtiff"

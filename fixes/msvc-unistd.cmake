@@ -1,4 +1,4 @@
-file(WRITE "${EP_INSTALL}/include/unistd.h"
+file(WRITE "${CMAKE_PREFIX_PATH}/include/unistd.h"
 [[
 #ifndef _UNISTD_H
 #define _UNISTD_H 1

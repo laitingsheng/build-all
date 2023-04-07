@@ -6,26 +6,13 @@ project("build-all"
 		CXX
 )
 
-if (DEFINED ENV{CMAKE_CACHE_PREFIX})
-	cmake_path(SET EP_PREFIX NORMALIZE "$ENV{CMAKE_CACHE_PREFIX}")
-elseif (DEFINED CMAKE_CACHE_PREFIX)
-	cmake_path(SET EP_PREFIX NORMALIZE "${CMAKE_CACHE_PREFIX}")
-else ()
-	cmake_path(SET EP_PREFIX NORMALIZE "${CMAKE_CURRENT_BINARY_DIR}/_deps")
-endif ()
-
-if (DEFINED ENV{CMAKE_INSTALL_PREFIX})
-	cmake_path(SET EP_INSTALL NORMALIZE "$ENV{CMAKE_INSTALL_PREFIX}")
-elseif (DEFINED CMAKE_INSTALL_PREFIX)
-	cmake_path(SET EP_INSTALL NORMALIZE "${CMAKE_INSTALL_PREFIX}")
-else ()
-	cmake_path(SET EP_INSTALL NORMALIZE "${CMAKE_BINARY_DIR}")
-endif ()
-
-message(STATUS "ExternalProject prefix is set to ${EP_PREFIX}, installation prefix is set to ${EP_INSTALL}.")
-
+cmake_path(SET CMAKE_PREFIX_PATH NORMALIZE "$ENV{CMAKE_PREFIX_PATH}")
+cmake_path(SET EP_PREFIX NORMALIZE "$ENV{CMAKE_EP_PREFIX}")
 cmake_path(SET NASM_ROOT NORMALIZE "$ENV{NASM_ROOT}")
 cmake_path(SET Python_ROOT_DIR NORMALIZE "$ENV{CONDA_PREFIX}")
+cmake_path(SET Python3_ROOT_DIR NORMALIZE "$ENV{CONDA_PREFIX}")
+
+message(STATUS "ExternalProject prefix is set to ${EP_PREFIX}, installation prefix is set to ${CMAKE_PREFIX_PATH}.")
 
 find_package(PkgConfig GLOBAL BYPASS_PROVIDER)
 find_package(Python 3 REQUIRED COMPONENTS Interpreter GLOBAL BYPASS_PROVIDER)
