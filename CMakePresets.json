@@ -1,0 +1,38 @@
+{
+  "version": 4,
+  "include": [
+    "utilities/CMakePresets.json"
+  ],
+  "buildPresets": [
+    {
+      "name": "dummy",
+      "hidden": true,
+      "targets": [
+        "dummy"
+      ],
+      "verbose": true
+    },
+    {
+      "name": "dummy-release",
+      "inherits": "dummy",
+      "displayName": "Dummy [Release]",
+      "configurePreset": "x64-release",
+      "condition": {
+        "type": "equals",
+        "lhs": "${hostSystemName}",
+        "rhs": "Windows"
+      }
+    },
+    {
+      "name": "dummy-debug",
+      "inherits": "dummy",
+      "displayName": "Dummy [Debug]",
+      "configurePreset": "x64-debug",
+      "condition": {
+        "type": "equals",
+        "lhs": "${hostSystemName}",
+        "rhs": "Windows"
+      }
+    }
+  ]
+}
