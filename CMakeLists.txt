@@ -60,6 +60,7 @@ set(DEPENDENCIES
 	"jsoncpp"
 	"lerc"
 	"libdeflate"
+	"libtommath"
 	"lz4"
 	"mimalloc"
 	"nameof"
@@ -72,6 +73,7 @@ set(DEPENDENCIES
 
 	"libjpeg-turbo"
 	"libpng"
+	"libtomcrypt"
 	"libxlsxwriter"
 	"protobuf"
 	"spdlog"
