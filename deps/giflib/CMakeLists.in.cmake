@@ -7,6 +7,12 @@ project(giflib
 		C
 )
 
+if (MSVC)
+	file(READ "${CMAKE_CURRENT_SOURCE_DIR}/gif_hash.h" GIF_HASH_H)
+	string(REPLACE "<unistd.h>" "<io.h>" GIF_HASH_H "${GIF_HASH_H}")
+	file(GENERATE OUTPUT "${CMAKE_CURRENT_SOURCE_DIR}/gif_hash.h" CONTENT "${GIF_HASH_H}" NEWLINE_STYLE LF)
+endif ()
+
 add_library(gif STATIC
 	"dgif_lib.c"
 	"egif_lib.c"
@@ -16,12 +22,6 @@ add_library(gif STATIC
 	"gif_hash.c"
 	"openbsd-reallocarray.c"
 )
-if (MSVC)
-	target_include_directories(gif SYSTEM
-		PRIVATE
-			"${CMAKE_INSTALL_PREFIX}/include"
-	)
-endif ()
 set_property(
 	TARGET
 		gif

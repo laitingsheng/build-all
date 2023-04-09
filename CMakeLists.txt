@@ -6,13 +6,13 @@ project("build-all"
 		CXX
 )
 
-cmake_path(SET CMAKE_PREFIX_PATH NORMALIZE "$ENV{CMAKE_PREFIX_PATH}")
+cmake_path(SET CMAKE_EP_INSTALL_PREFIX NORMALIZE "$ENV{CMAKE_EP_INSTALL_PREFIX}")
 cmake_path(SET EP_PREFIX NORMALIZE "$ENV{CMAKE_EP_PREFIX}")
 cmake_path(SET NASM_ROOT NORMALIZE "$ENV{NASM_ROOT}")
 cmake_path(SET Python_ROOT_DIR NORMALIZE "$ENV{CONDA_PREFIX}")
 cmake_path(SET Python3_ROOT_DIR NORMALIZE "$ENV{CONDA_PREFIX}")
 
-message(STATUS "ExternalProject prefix is set to ${EP_PREFIX}, installation prefix is set to ${CMAKE_PREFIX_PATH}.")
+message(STATUS "ExternalProject prefix is set to ${EP_PREFIX}, installation prefix is set to ${CMAKE_EP_INSTALL_PREFIX}.")
 
 find_package(PkgConfig GLOBAL BYPASS_PROVIDER)
 find_package(Python 3 REQUIRED COMPONENTS Interpreter GLOBAL BYPASS_PROVIDER)
@@ -20,10 +20,6 @@ find_package(Python 3 REQUIRED COMPONENTS Interpreter GLOBAL BYPASS_PROVIDER)
 find_program(CMAKE_ASM_NASM_COMPILER "nasm" PATHS "${NASM_ROOT}" REQUIRED NO_DEFAULT_PATH)
 
 include(ExternalProject)
-
-if (MSVC)
-	include("fixes/msvc-unistd.cmake" NO_POLICY_SCOPE)
-endif ()
 
 include("args.cmake" NO_POLICY_SCOPE)
 include("utils.cmake" NO_POLICY_SCOPE)
@@ -50,19 +46,24 @@ endif ()
 
 set(DEPENDENCIES
 	"abseil"
+	"antlr"
 	"argparse"
 	"brotli"
 	"bzip2"
+	"c-ares"
 	"ctre"
 	"fmt"
 	"giflib"
 	"jbigkit"
 	"jsoncpp"
 	"lerc"
+	"libb2"
 	"libdeflate"
 	"libtommath"
 	"lz4"
+	"mbedtls"
 	"mimalloc"
+	"msgpack"
 	"nameof"
 	"nlohmann_json"
 	"xz"
